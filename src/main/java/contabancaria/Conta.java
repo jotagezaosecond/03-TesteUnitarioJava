@@ -20,6 +20,14 @@ public class Conta {
     public double getSaldo() { return saldo; }
     public boolean isAtiva() { return ativa; }
 
+    private void validarValorPositivo(double valor) {
+        if (valor <= 0) {
+            throw new IllegalArgumentException(
+                "O valor deve ser maior que zero."
+            );
+        }
+    }
+
     /**
      * Cria uma conta bancária com saldo inicial.
      * Regras:
@@ -52,9 +60,15 @@ public class Conta {
      *   - Conta deve estar ativa (lançar IllegalStateException).
      *   - O saldo deve ser atualizado corretamente.
      */
+
     public void depositar(double valor) {
-        // TODO: Implemente usando TDD
-        throw new UnsupportedOperationException();
+        validarValorPositivo(valor);
+
+        if (!ativa) {
+            throw new IllegalStateException("A conta está inativa.");
+        }
+
+        saldo += valor;
     }
 
     /**
@@ -65,10 +79,21 @@ public class Conta {
      *   - Não pode sacar mais do que o saldo (lançar IllegalStateException).
      *   - O saldo deve ser atualizado corretamente.
      */
+    
     public void sacar(double valor) {
-        // TODO: Implemente usando TDD
-        throw new UnsupportedOperationException();
+        validarValorPositivo(valor);
+
+        if (!ativa) {
+            throw new IllegalStateException("A conta está inativa.");
+        }
+
+        if (valor > saldo) {
+            throw new IllegalStateException("Saldo insuficiente.");
+        }
+
+        saldo -= valor;
     }
+
 
     /**
      * Transfere valor desta conta para outra.
@@ -78,10 +103,24 @@ public class Conta {
      *   - Saldo deve ser suficiente (lançar IllegalStateException).
      *   - O saldo de ambas as contas deve ser atualizado corretamente.
      */
+    
     public void transferir(Conta destino, double valor) {
-        // TODO: Implemente usando TDD
-        throw new UnsupportedOperationException();
+        if (!ativa || !destino.ativa) {
+            throw new IllegalStateException("Uma das contas está inativa.");
+        }
+
+        if (valor <= 0) {
+            throw new IllegalArgumentException("O valor deve ser maior que zero.");
+        }
+
+        if (valor > saldo) {
+            throw new IllegalStateException("Saldo insuficiente.");
+        }
+
+        saldo -= valor;
+        destino.saldo += valor;
     }
+
 
     /**
      * Encerra a conta.
@@ -90,8 +129,16 @@ public class Conta {
      *   - O saldo deve ser zero para encerrar (lançar IllegalStateException se houver saldo).
      *   - A propriedade ativa deve ser alterada para false.
      */
+
     public void encerrar() {
-        // TODO: Implemente usando TDD
-        throw new UnsupportedOperationException();
+        if (!ativa) {
+            throw new IllegalStateException("A conta já está inativa.");
+        }
+
+        if (saldo > 0) {
+            throw new IllegalStateException("A conta possui saldo.");
+        }
+
+        ativa = false;
     }
 }
